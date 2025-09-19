@@ -1,16 +1,28 @@
 'use strict';
 
-const populations = document.getElementsByClassName('population');
+const populations = document.querySelectorAll('span.population');
 let totalPopulation = 0;
+let populationsCount = 0;
 
 for (const population of populations) {
-  totalPopulation += Number(population.textContent.replaceAll(',', ''));
+  const cleaned = population.textContent.replace(/,/g, '').trim();
+  const value = Number(cleaned);
+
+  if (!Number.isNaN(value)) {
+    totalPopulation += value;
+    populationsCount++;
+  }
 }
 
 document.querySelector('.total-population').textContent =
-  totalPopulation.toLocaleString();
+  totalPopulation.toLocaleString('en-US');
 
-const averagePopulation = totalPopulation / populations.length;
+const averageEl = document.querySelector('.average-population');
 
-document.querySelector('.average-population').textContent =
-  Math.round(averagePopulation).toLocaleString();
+if (populationsCount > 0) {
+  const averagePopulation = totalPopulation / populationsCount;
+
+  averageEl.textContent = Math.round(averagePopulation).toLocaleString('en-US');
+} else {
+  averageEl.textContent = 'N/A';
+}
